@@ -1,4 +1,4 @@
 django
-djangso-cors-headers
+django-cors-headers
 djangorestframework
 gunicorn
