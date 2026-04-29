@@ -1,0 +1,4 @@
+djanjo
+djanjo-cors-headers
+djangorestframework
+gunicorn
