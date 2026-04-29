@@ -1,4 +1,4 @@
-djanjo
-djanjo-cors-headers
+django
+djangso-cors-headers
 djangorestframework
 gunicorn
