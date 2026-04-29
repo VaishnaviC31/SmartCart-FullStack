@@ -13,8 +13,8 @@ function App() {
   const [address, setAddress] = useState("");
   const [orders, setOrders] = useState([]); // Tracking state
 
-  useEffect(() => {
-    axios.get('http://127.0.0.1:8000/api/products/')
+  useEffect(() => {(
+    axios.get('https://smartcart-fullstack-4.onrender.com/api/products/'))
       .then(res => setProducts(res.data))
       .catch(err => console.error("Fetch error:", err));
   }, []);
@@ -41,7 +41,8 @@ function App() {
     const totalAmount = cart.reduce((sum, item) => sum + Number(item.Price), 0);
 
     try {
-      const res = await axios.post('http://127.0.0.1:8000/api/checkout/', { amount: totalAmount });
+    
+    const res = await axios.post('https://smartcart-fullstack-4.onrender.com/api/checkout/', { amount: totalAmount });
       
       const options = {
         key: "rzp_test_Sg7ZatwEe5Dyu1", 
@@ -53,7 +54,7 @@ function App() {
         handler: async function (response) {
           alert("Payment Success! ID: " + response.razorpay_payment_id);
           
-          // --- ORDER TRACKING UPDATE LOGIC ---
+          
           const newOrder = {
             id: response.razorpay_payment_id,
             items: [...cart], // Current cart items-ah tracking-ku mathurom
@@ -65,7 +66,8 @@ function App() {
           // State update: Ippo potta order-ah list-la top-la veikirom
           setOrders(prevOrders => [newOrder, ...prevOrders]);
 
-          await axios.post('http://127.0.0.1:8000/api/payment-success/', {
+
+          await axios.post('https://smartcart-fullstack-4.onrender.com/api/payment-success/',  {
             razorpay_payment_id: response.razorpay_payment_id,
             cart_items: cart,
             address: address
