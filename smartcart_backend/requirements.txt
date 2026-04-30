@@ -2,3 +2,5 @@ django
 django-cors-headers
 djangorestframework
 gunicorn
+djangorestframework-simplejwt
+django-cloudinary-storage
