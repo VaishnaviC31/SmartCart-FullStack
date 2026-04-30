@@ -13,11 +13,12 @@ function App() {
   const [address, setAddress] = useState("");
   const [orders, setOrders] = useState([]); // Tracking state
 
-  useEffect(() => {(
-    axios.get('https://smartcart-fullstack-4.onrender.com/api/products/'))
+
+useEffect(() => {
+    axios.get('https://smartcart-fullstack-4.onrender.com/api/products/')
       .then(res => setProducts(res.data))
       .catch(err => console.error("Fetch error:", err));
-  }, []);
+}, []);
 
   const addToCart = (product) => {
     setCart([...cart, product]);
