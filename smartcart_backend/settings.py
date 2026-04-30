@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-@ziyl1(bp+keigo)jkbbn!#hoj$%320!8h%553g))*gys^6#5k
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['smartcart-fullstack-4.onrender.com', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -120,4 +120,6 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
 STATIC_URL = 'static/'
-CORS_ALLOWED_ORIGINS = True 
+CORS_ALLOWED_ORIGINS = [
+    "https://your-vercel-link.vercel.app",
+ ] 
