@@ -23,7 +23,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-@ziyl1(bp+keigo)jkbbn!#hoj$%320!8h%553g))*gys^6#5k'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['*']
 
@@ -123,3 +123,7 @@ STATIC_URL = 'static/'
 CORS_ALLOWED_ORIGINS = [
     "https://your-vercel-link.vercel.app",
  ] 
+import os
+
+RAZORPAY_KEY_ID = os.environ.get('RAZORPAY_KEY_ID', '"rzp_test_Sg7ZatwEe5Dyu1",')
+RAZORPAY_KEY_SECRET = os.environ.get('RAZORPAY_KEY_SECRET', 'Dsfn42NYrAZq4ADDzNjQDxXO')
