@@ -11,14 +11,16 @@ function App() {
   const [searchTerm, setSearchTerm] = useState(""); 
   const [isLoggedIn, setIsLoggedIn] = useState(true); 
   const [address, setAddress] = useState("");
-  const [orders, setOrders] = useState([]); // Tracking state
+  const [orders, setOrders] = useState([]);
 
+  // UPDATE: Ippo namma deploy panna pudhu Render URL
+  const BACKEND_URL = "https://smartcart-fullstack-5.onrender.com";
 
-useEffect(() => {
-    axios.get('https://smartcart-fullstack-4.onrender.com/api/products/')
+  useEffect(() => {
+    axios.get(`${BACKEND_URL}/api/products/`)
       .then(res => setProducts(res.data))
       .catch(err => console.error("Fetch error:", err));
-}, []);
+  }, []);
 
   const addToCart = (product) => {
     setCart([...cart, product]);
@@ -42,11 +44,11 @@ useEffect(() => {
     const totalAmount = cart.reduce((sum, item) => sum + Number(item.Price), 0);
 
     try {
-    
-    const res = await axios.post('https://smartcart-fullstack-4.onrender.com/api/checkout/', { amount: totalAmount });
+      // Step 1: Backend-la order create pandrom
+      const res = await axios.post(`${BACKEND_URL}/api/checkout/`, { amount: totalAmount });
       
       const options = {
-        key: "rzp_test_Sg7ZatwEe5Dyu1", 
+        key: "rzp_test_Sg7ZatwEe5Dyu1", // Unga current Razorpay Key
         amount: res.data.payment.amount,
         currency: "INR",
         name: "SmartCart",
@@ -55,26 +57,24 @@ useEffect(() => {
         handler: async function (response) {
           alert("Payment Success! ID: " + response.razorpay_payment_id);
           
-          
           const newOrder = {
             id: response.razorpay_payment_id,
-            items: [...cart], // Current cart items-ah tracking-ku mathurom
+            items: [...cart],
             total: totalAmount,
-            status: "Shipped", // Live status update
+            status: "Shipped",
             date: new Date().toLocaleDateString()
           };
           
-          // State update: Ippo potta order-ah list-la top-la veikirom
           setOrders(prevOrders => [newOrder, ...prevOrders]);
 
-
-          await axios.post('https://smartcart-fullstack-4.onrender.com/api/payment-success/',  {
+          // Step 2: Backend-ku success info anupuroam
+          await axios.post(`${BACKEND_URL}/api/payment-success/`, {
             razorpay_payment_id: response.razorpay_payment_id,
             cart_items: cart,
             address: address
           });
           
-          setCart([]); // Payment mudinjathum cart clear aayidum
+          setCart([]); 
         },
         prefill: { name: "Vaishnavi", email: "vaishu123@gmail.com" },
         theme: { color: "#2874f0" }
@@ -83,7 +83,7 @@ useEffect(() => {
       const rzp = new window.Razorpay(options);
       rzp.open();
     } catch (err) {
-      alert("Checkout failed! Server check pannunga.");
+      alert("Checkout failed! Render Dashboard-la logs check pannunga.");
     }
   };
 
@@ -140,7 +140,6 @@ useEffect(() => {
                 )}
               </div>
 
-              {/* --- TRACKING UI SECTION --- */}
               {orders.length > 0 && (
                 <div className="orders-section">
                   <hr className="divider" />
@@ -169,7 +168,10 @@ useEffect(() => {
           } />
           
           <Route path="/login" element={<Login setIsLoggedIn={setIsLoggedIn} />} />
-          <Route path="/admin-panel" element={() => window.location.replace('http://127.0.0.1:8000/admin')} />
+          <Route path="/admin-panel" element={() => {
+            window.location.replace(`${BACKEND_URL}/admin`);
+            return null;
+          }} />
         </Routes>
       </div>
     </Router>
