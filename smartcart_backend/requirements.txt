@@ -5,3 +5,4 @@ gunicorn
 djangorestframework-simplejwt
 django-cloudinary-storage
 razorpay
+whitenoise
