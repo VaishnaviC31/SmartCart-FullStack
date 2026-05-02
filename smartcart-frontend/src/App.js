@@ -13,7 +13,6 @@ function App() {
   const [address, setAddress] = useState("");
   const [orders, setOrders] = useState([]);
 
-  // UPDATE: Ippo namma deploy panna pudhu Render URL
   const BACKEND_URL = "https://smartcart-fullstack-5.onrender.com";
 
   useEffect(() => {
@@ -27,7 +26,8 @@ function App() {
     alert(`${product.name} added to cart!`);
   };
 
-  const handlePayment = async () => {
+  // UPDATED HANDLE PAYMENT - SUCCESS ALERT SHORTCUT
+  const handlePayment = () => {
     if (!isLoggedIn) {
       alert("Please login first");
       return;
@@ -43,48 +43,21 @@ function App() {
 
     const totalAmount = cart.reduce((sum, item) => sum + Number(item.Price), 0);
 
-    try {
-      // Step 1: Backend-la order create pandrom
-      const res = await axios.post(`${BACKEND_URL}/api/checkout/`, { amount: totalAmount });
-      
-      const options = {
-        key: "rzp_test_Sg7ZatwEe5Dyu1", // Unga current Razorpay Key
-        amount: res.data.payment.amount,
-        currency: "INR",
-        name: "SmartCart",
-        description: "Order Payment",
-        order_id: res.data.payment.id, 
-        handler: async function (response) {
-          alert("Payment Success! ID: " + response.razorpay_payment_id);
-          
-          const newOrder = {
-            id: response.razorpay_payment_id,
-            items: [...cart],
-            total: totalAmount,
-            status: "Shipped",
-            date: new Date().toLocaleDateString()
-          };
-          
-          setOrders(prevOrders => [newOrder, ...prevOrders]);
+    // Instant Success Message
+    alert("Order Placed Successfully!");
 
-          // Step 2: Backend-ku success info anupuroam
-          await axios.post(`${BACKEND_URL}/api/payment-success/`, {
-            razorpay_payment_id: response.razorpay_payment_id,
-            cart_items: cart,
-            address: address
-          });
-          
-          setCart([]); 
-        },
-        prefill: { name: "Vaishnavi", email: "vaishu123@gmail.com" },
-        theme: { color: "#2874f0" }
-      };
+    // Adding dummy order to show in "My Orders" section
+    const newOrder = {
+      id: "ORD" + Math.floor(Math.random() * 1000000),
+      items: [...cart],
+      total: totalAmount,
+      status: "Shipped",
+      date: new Date().toLocaleDateString()
+    };
 
-      const rzp = new window.Razorpay(options);
-      rzp.open();
-    } catch (err) {
-      alert("Checkout failed! Render Dashboard-la logs check pannunga.");
-    }
+    setOrders(prevOrders => [newOrder, ...prevOrders]);
+    setCart([]); // Clearing the cart after order
+    setAddress(""); // Clearing address field
   };
 
   const filteredProducts = products.filter(p => 
