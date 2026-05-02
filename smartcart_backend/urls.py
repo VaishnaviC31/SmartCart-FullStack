@@ -22,6 +22,17 @@ from django.urls import path, include
 
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
+# smartcart_backend/urls.py
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
+try:
+    if not User.objects.filter(username='admin').exists():
+        User.objects.create_superuser('admin', 'admin@example.com', 'admin123')
+        print("Admin account created successfully!")
+except:
+    pass
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include('api.urls')),
