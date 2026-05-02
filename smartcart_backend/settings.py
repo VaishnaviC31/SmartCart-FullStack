@@ -8,10 +8,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-@ziyl1(bp+keigo)jkbbn!#hoj$%320!8h%553g))*gys^6#5k'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG =True
 
 # Mukkiam: Domain name mattum dhaan irukkanum, https:// irukka koodathu
-ALLOWED_HOSTS = ['smartcart-fullstack-5.onrender.com', 'localhost', '127.0.0.1', '.onrender.com']
+ALLOWED_HOSTS = ['*']
 
 # Application definition
 INSTALLED_APPS = [
@@ -57,7 +57,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'smartcart_backend.wsgi.application'
 
-# Database - SQLite use pandradhaala Render-la data temporary-ah dhaan irukkum
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
