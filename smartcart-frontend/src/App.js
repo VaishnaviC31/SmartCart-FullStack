@@ -62,9 +62,10 @@ function App() {
 
   const filteredProducts = products.filter(p => 
     p.name.toLowerCase().includes(searchTerm.toLowerCase())
-  );  
-
+  );   
   
+
+
 
   return (
     <Router>
