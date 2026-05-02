@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-@ziyl1(bp+keigo)jkbbn!#hoj$%320!8h%553g))*gys^6#5k
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['https://smartcart-fullstack-5.onrender.com']
 
 
 # Application definition
