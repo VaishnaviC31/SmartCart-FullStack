@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Product, Cart, CartItem,Wishlist
+from .models import Product, Cart, CartItem, Wishlist, Order, OrderItem # Order models-aiyum include pannikonga
 from django.contrib.auth.models import User
 
 class ProductSerializer(serializers.ModelSerializer):
@@ -9,15 +9,15 @@ class ProductSerializer(serializers.ModelSerializer):
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
+        # Profile management-kku 'first_name', 'last_name' kooda add pannikalam
         model = User
-        fields = ['id', 'username', 'password', 'email']
+        fields = ['id', 'username', 'password', 'email', 'first_name', 'last_name']
         extra_kwargs = {'password': {'write_only': True}}
 
     def create(self, validated_data):
         user = User.objects.create_user(**validated_data)
         return user
 
-# Intha code dhaan ippo unga error-ku kaaranam!
 class CartItemSerializer(serializers.ModelSerializer):
     product = ProductSerializer(read_only=True)
     product_id = serializers.PrimaryKeyRelatedField(
@@ -37,13 +37,26 @@ class CartSerializer(serializers.ModelSerializer):
         fields = ['id', 'user', 'items', 'total_price', 'created_at']
 
     def get_total_price(self, obj):
-        # Cart-la irukkura ellatheyum calculate pannum
         return sum(item.product.Price * item.quantity for item in obj.items.all())
 
-
+# PENDING FEATURE: Wishlist Serializer
 class WishlistSerializer(serializers.ModelSerializer):
-    product_details = ProductSerializer(source = 'product',read_only=True)
+    # Frontend-la product name, price, image kaatta idhu venum
+    product_details = ProductSerializer(source='product', read_only=True)
 
     class Meta:
         model = Wishlist
-        fields = ['id','product','product_details','added_on']
+        fields = ['id', 'product', 'product_details', 'added_On']
+
+# PENDING FEATURE: Order Serializer (Orders track panna idhu help pannum)
+class OrderItemSerializer(serializers.ModelSerializer):
+    product_details = ProductSerializer(source='product', read_only=True)
+    class Meta:
+        model = OrderItem
+        fields = ['id', 'product', 'product_details', 'quantity', 'price']
+
+class OrderSerializer(serializers.ModelSerializer):
+    items = OrderItemSerializer(many=True, read_only=True)
+    class Meta:
+        model = Order 
+        fields = ['id', 'user', 'total_price', 'created_at', 'items']
