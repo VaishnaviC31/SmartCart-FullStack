@@ -1,4 +1,4 @@
-/* Flipkart Official Colors */
+
 :root {
   --fk-blue: #2874f0;
   --fk-orange: #fb641b;
@@ -19,7 +19,7 @@ body {
   margin: auto;
 }
 
-/* Header & Search */
+
 .hero-section {
   background-color: var(--fk-blue);
   padding: 40px 20px;
@@ -39,7 +39,7 @@ body {
   box-shadow: 0 2px 4px rgba(0,0,0,0.2);
 }
 
-/* Product Cards */
+
 .product-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
@@ -65,7 +65,7 @@ body {
   margin-bottom: 10px;
 }
 
-/* Buttons */
+
 .add-btn {
   background-color: var(--fk-yellow);
   color: white;
@@ -88,7 +88,7 @@ body {
   box-shadow: 0 1px 2px rgba(0,0,0,0.2);
 }
 
-/* Address & Orders */
+
 .address-container, .orders-section {
   background: white;
   padding: 20px;
@@ -112,7 +112,12 @@ body {
 }
 
 
-.product-card { position: relative; }
+.product-card {
+  
+  position: relative;
+
+}
+
 .wishlist-icon {
   position: absolute;
   top: 10px;
@@ -123,4 +128,112 @@ body {
   border-radius: 50%;
   padding: 5px;
   box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+
+.navbar {
+  background-color: #2874f0;
+  padding: 1rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: white;
+}
+.nav-links {
+   list-style: none;
+    display: flex;
+     gap: 20px; 
+    }
+
+
+.nav-links a { 
+  color: white;
+   text-decoration: none;
+    font-weight: bold; 
+  }
+.cart-badge {
+   background: red; 
+   padding: 2px 6px;
+    border-radius: 50%;
+     font-size: 12px;
+     }
+
+
+.login-container { 
+  display: flex; 
+  justify-content: center;
+   margin-top: 50px; 
+  }
+
+
+.login-form { 
+  border: 1px solid #ddd; 
+  padding: 30px;
+   border-radius: 8px;
+    width: 350px;
+   }
+.login-form input { 
+  width: 100%;
+   margin-bottom: 15px;
+    padding: 10px;
+     border: 1px solid #ccc; 
+    }
+.login-btn {
+   width: 100%;
+    padding: 10px; 
+    background: #fb641b; 
+    color: white;
+     border: none; 
+     cursor: pointer; 
+    }
+
+
+.profile-card {
+   max-width: 400px;
+    margin: 40px auto;
+     padding: 20px;
+      border: 1px solid #eee;
+       text-align: left;
+       }
+
+ 
+.profile-title {
+   border-bottom: 2px solid #2874f0;
+    padding-bottom: 10px; 
+  }
+
+
+.profile-info p {
+   margin: 10px 0; 
+   font-size: 16px; 
+  }
+
+
+.product-card {
+    position: relative; 
+    border: 1px solid #eee;
+    padding: 15px;
+    border-radius: 10px;
+    transition: 0.3s;
+}
+
+.wishlist-icon-overlay {
+    position: absolute;
+    top: 15px;   
+    right: 15px;    
+    font-size: 24px;
+    cursor: pointer;
+    background: white;
+    width: 35px;
+    height: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    z-index: 10;
+}
+
+.wishlist-icon-overlay:hover {
+    transform: scale(1.2);
 }

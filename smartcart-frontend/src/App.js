@@ -1,26 +1,29 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import axios from 'axios';
 import Navbar from './Components/Navbar';
 import Login from './Components/Login';
-import Wishlist from './Components/Wishlist'; // NEW
-import Profile from './Components/Profile';   // NEW
+import Profile from './Components/Profile';
+import Wishlist from './Components/Wishlist';
+import Cart from './Components/Cart';
 import './App.css';
 
 function App() {
   const [products, setProducts] = useState([]);
-  const [cart, setCart] = useState([]); 
+  const [cart, setCart] = useState([]);
+  const [wishlist, setWishlist] = useState([]); 
   const [searchTerm, setSearchTerm] = useState(""); 
-  const [isLoggedIn, setIsLoggedIn] = useState(localStorage.getItem('access') ? true : false); 
-  const [address, setAddress] = useState("");
-  const [orders, setOrders] = useState([]);
+  const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem('access'));
 
-  const BACKEND_URL = "https://smartcart-fullstack-5.onrender.com";
+  const BACKEND_URL = "http://127.0.0.1:8000"; 
 
   useEffect(() => {
     axios.get(`${BACKEND_URL}/api/products/`)
       .then(res => setProducts(res.data))
-      .catch(err => console.error("Fetch error:", err));
+      .catch(err => console.error("Backend connect aagala:", err));
+
+    const token = localStorage.getItem('access');
+    if (token) setIsLoggedIn(true);
   }, []);
 
   const addToCart = (product) => {
@@ -28,77 +31,71 @@ function App() {
     alert(`${product.name} added to cart!`);
   };
 
-  // --- WISHLIST LOGIC ---
-  const addToWishlist = async (productId) => {
-    try {
-      const token = localStorage.getItem('access');
-      if (!token) {
-        alert("Please login to add items to wishlist!");
-        return;
-      }
-      await axios.post(`${BACKEND_URL}/api/wishlist/`, 
-        { product_id: productId },
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
-      alert("Added to Wishlist ");
-    } catch (err) {
-      alert("Already in wishlist or error occurred!");
-    }
+  const toggleWishlist = (product) => {
+    axios.post(`${BACKEND_URL}/api/wishlist/`, { product_id: product.id })
+      .then(res => {
+        setWishlist([...wishlist, product]);
+        alert("Added to Wishlist! ❤️");
+      })
+      .catch(err => {
+        console.error("Save aagala:", err);
+        alert("Database-la save pannumbodhu error varudhu!");
+      });
   };
-
-  const handlePayment = () => {
-    // ... unga current handlePayment logic ...
-    alert("Order Placed Successfully!");
-    // Logic goes here
-  };
-
-  const filteredProducts = products.filter(p => 
-    p.name.toLowerCase().includes(searchTerm.toLowerCase())
-  );   
 
   return (
     <Router>
       <div className="App">
-        <Navbar cartCount={cart.length} setSearchTerm={setSearchTerm} isLoggedIn={isLoggedIn} />
+        <Navbar cartCount={cart.length} isLoggedIn={isLoggedIn} />
         
         <Routes>
           <Route path="/" element={
             <div className="container">
-              {/* Hero Section & Search Bar */}
               <div className="hero-section">
-                <h1 className="title">SmartCart - Biggest Sale</h1>
-                <input 
-                  type="text" 
-                  placeholder="Search products..." 
-                  className="main-search-bar"
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                />
+                <h1 className="hero-title">SmartCart - Biggest Sale</h1>
+                <div className="search-container">
+                  <input 
+                    type="text" 
+                    placeholder="Search products by name..." 
+                    className="main-search-bar"
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)} 
+                  />
+                </div>
               </div>
 
-              {/* Product Grid */}
               <div className="product-grid">
-                {filteredProducts.map(product => (
-                  <div key={product.id} className="product-card">
-                    <div className="wishlist-icon" onClick={() => addToWishlist(product.id)}>❤️</div>
-                    <img src={product.image_url} alt={product.name} className="product-image" />
-                    <h3>{product.name}</h3>
-                    <p className="product-price">₹{product.Price}</p>
-                    <button className="add-btn" onClick={() => addToCart(product)}>Add to Cart</button>
-                  </div>
-                ))}
+                {products
+                  .filter(product => 
+                    product.name.toLowerCase().includes(searchTerm.toLowerCase())
+                  )
+                  .map(product => (
+                    <div key={product.id} className="product-card">
+                      <div className="wishlist-icon-overlay" onClick={() => toggleWishlist(product)}>
+                         {wishlist.some(item => item.id === product.id) ? "❤️" : "❤️"}
+                      </div>
+                      
+                      <img src={product.image_url} alt={product.name} className="product-image" />
+                      <h3>{product.name}</h3>
+                      <p className="price">₹{product.Price}</p>
+                      <button className="add-btn" onClick={() => addToCart(product)}>Add to Cart</button>
+                    </div>
+                  ))}
               </div>
             </div>
           } />
+
+          <Route path="/login" element={<Login setIsLoggedIn={setIsLoggedIn} BACKEND_URL={BACKEND_URL} />} />
+          <Route path="/profile" element={<Profile BACKEND_URL={BACKEND_URL} />} />
+          <Route path="/wishlist" element={<Wishlist wishlistItems={wishlist} />} />
           
-          {/* NEW ROUTES */}
-          <Route path="/login" element={<Login setIsLoggedIn={setIsLoggedIn} />} />
-          <Route path="/wishlist" element={<Wishlist />} />
-          <Route path="/profile" element={<Profile />} />
-          
-          <Route path="/admin-panel" element={() => {
-            window.location.replace(`${BACKEND_URL}/admin`);
-            return null;
-          }} />
+          <Route path="/cart" element={
+            <Cart 
+              cartItems={cart} 
+              setCart={setCart} 
+              BACKEND_URL={BACKEND_URL} 
+            />
+          } />
         </Routes>
       </div>
     </Router>

@@ -3,6 +3,9 @@ import axios from 'axios';
 
 const Wishlist = () => {
     const [wishlistItems, setWishlistItems] = useState([]);
+    
+
+    const BACKEND_URL = "http://127.0.0.1:8000"; 
 
     useEffect(() => {
         fetchWishlist();
@@ -10,43 +13,55 @@ const Wishlist = () => {
 
     const fetchWishlist = async () => {
         try {
-            const token = localStorage.getItem('access'); // Login token
-            const response = await axios.get('http://127.0.0.1:8000/api/wishlist/', {
+            const token = localStorage.getItem('access');
+            if (!token) return;
+
+            const response = await axios.get(`${BACKEND_URL}/api/wishlist/`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             setWishlistItems(response.data);
         } catch (error) {
-            console.error("Wishlist fetch panna mudiyala!", error);
+            console.error("Wishlist fetch error!", error.response?.data || error.message);
         }
     };
 
     const removeFromWishlist = async (id) => {
         try {
             const token = localStorage.getItem('access');
-            await axios.delete(`http://127.0.0.1:8000/api/wishlist/${id}/`, {
+            await axios.delete(`${BACKEND_URL}/api/wishlist/${id}/`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
-            fetchWishlist(); // Refresh the list
+           
+            fetchWishlist(); 
         } catch (error) {
-            alert("Remove panna mudiyaala!");
+            alert("Remove failed! Please check login.");
         }
     };
 
     return (
         <div className="container mt-5">
-            <h2>My Wishlist </h2>
-            {wishlistItems.length === 0 ? <p>Unga wishlist empty-ah irukku!</p> : (
-                <div className="row">
+            <h2 className="profile-title">My Wishlist ❤️</h2>
+            {wishlistItems.length === 0 ? (
+                <p className="loading">Your wishlist is empty!</p>
+            ) : (
+                <div className="product-grid">
                     {wishlistItems.map(item => (
-                        <div key={item.id} className="col-md-4 mb-4">
-                            <div className="card">
-                                <img src={item.product_details.image} className="card-img-top" alt="..." />
-                                <div className="card-body">
-                                    <h5 className="card-title">{item.product_details.name}</h5>
-                                    <p className="card-text">₹{item.product_details.Price}</p>
-                                    <button onClick={() => removeFromWishlist(item.id)} className="btn btn-danger">Remove</button>
-                                </div>
-                            </div>
+                        <div key={item.id} className="product-card">
+                            {/* Product details rendering fix */}
+                            <img 
+                                src={item.product_details?.image_url || item.image_url} 
+                                className="product-image" 
+                                alt="product" 
+                            />
+                            <h3>{item.product_details?.name || item.name}</h3>
+                            <p className="price">₹{item.product_details?.Price || item.Price}</p>
+                            <button 
+                                onClick={() => removeFromWishlist(item.id)} 
+                                className="btn-danger"
+                                style={{backgroundColor: '#dc3545', color: 'white', border: 'none', padding: '8px', cursor: 'pointer', borderRadius: '5px'}}
+                            >
+                                Remove
+                            </button>
                         </div>
                     ))}
                 </div>

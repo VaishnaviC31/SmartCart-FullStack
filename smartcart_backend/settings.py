@@ -8,9 +8,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-@ziyl1(bp+keigo)jkbbn!#hoj$%320!8h%553g))*gys^6#5k'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG =True
+DEBUG = False
 
-# Mukkiam: Domain name mattum dhaan irukkanum, https:// irukka koodathu
 ALLOWED_HOSTS = ['*']
 
 # Application definition
@@ -23,15 +22,15 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     
     'rest_framework', 
-    'django_filters',  
     'corsheaders',
     'api',
 ]
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware', # Static files handling
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'corsheaders.middleware.CorsMiddleware', # CORS middleware mela irukkanum
+    'corsheaders.middleware.CorsMiddleware',  # Top-la irukanum
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -58,7 +57,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'smartcart_backend.wsgi.application'
 
-
+# Database
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -80,19 +79,28 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_TZ = True
 
-# Static files (CSS, JavaScript, Images)
+# Static files
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-
-# WhiteNoise storage configuration
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
 
-# Frontend connection settings
-CORS_ALLOWED_ORIGINS = [
-    "https://smart-cart-full-stack.vercel.app",
-    "http://localhost:3000",
-]
+
+# CORS Settings: Frontend connection prachanaingala fix pannum
+CORS_ALLOW_ALL_ORIGINS = True 
+CORS_ALLOW_CREDENTIALS = True
+
+# REST Framework Settings: Profile Loading issue fix pannum
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.AllowAny', 
+    ],
+}
 
 # Razorpay Keys
-RAZORPAY_KEY_ID = os.environ.get('RAZORPAY_KEY_ID', 'rzp_test_Sg7ZatwEe5Dyu1')
-RAZORPAY_KEY_SECRET = os.environ.get('RAZORPAY_KEY_SECRET', 'Dsfn42NYrAZq4ADDzNjQDxXO')
+RAZORPAY_KEY_ID = 'rzp_test_Sg7ZatwEe5Dyu1'
+RAZORPAY_KEY_SECRET = 'Dsfn42NYrAZq4ADDzNjQDxXO'
+
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
