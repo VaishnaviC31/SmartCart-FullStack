@@ -15,7 +15,8 @@ function App() {
   const [searchTerm, setSearchTerm] = useState(""); 
   const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem('access'));
 
-  const BACKEND_URL = "http://127.0.0.1:8000"; 
+  // <--- INGA THAAN CHANGE PANNIRUKAEN --->
+  const BACKEND_URL = "https://smartcart-fullstack-6.onrender.com"; 
 
   useEffect(() => {
     axios.get(`${BACKEND_URL}/api/products/`)
