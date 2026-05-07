@@ -15,9 +15,8 @@ function App() {
   const [searchTerm, setSearchTerm] = useState(""); 
   const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem('access'));
 
-  // <--- INGA THAAN CHANGE PANNIRUKAEN --->
-  const BACKEND_URL = "https://smartcart-fullstack-6.onrender.com"; 
-
+  const BACKEND_URL = "https://smartcart-fullstack-6.onrender.com";
+  
   useEffect(() => {
     axios.get(`${BACKEND_URL}/api/products/`)
       .then(res => setProducts(res.data))
